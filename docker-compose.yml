@@ -1,0 +1,36 @@
+version: '3'
+services:
+  sorry:
+    build:
+      context: ./sorry
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - backend
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - backend
+
+  kafka:
+    build: ./kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    # volumes:
+    #   - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: "bridge"
