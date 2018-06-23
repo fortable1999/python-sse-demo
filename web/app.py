@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 import asyncio
 from typing import Optional
 
@@ -35,8 +36,8 @@ async def consume():
         print("wait")
         async for msg in consumer:
             for queue in app.clients:
-                data = str(("consumed: ", msg.topic, msg.partition, msg.offset,
-                      msg.key, msg.value, msg.timestamp))
+                message = json.loads(msg.value).get('message', "NONE")
+                data = "%s > %s" % (msg.topic, message)
                 await queue.put(data)
     finally:
         # Will leave consumer group; perform autocommit if enabled.
