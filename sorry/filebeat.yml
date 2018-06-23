@@ -18,3 +18,4 @@ output.kafka:
   required_acks: 1
   compression: gzip
   max_message_bytes: 1000000
+  bulk_max_size: 1

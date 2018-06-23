@@ -11,6 +11,8 @@ services:
       - "443:443"
     networks:
       - backend
+    depends_on:
+      - "kafka"
 
   zookeeper:
     image: wurstmeister/zookeeper
@@ -26,10 +28,21 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: kafka
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    # volumes:
-    #   - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - backend
+    depends_on:
+      - "zookeeper"
+
+  web:
+    build: ./web
+    ports:
+      - "5000:5000"
+    environment:
+      KAFKA_HOSTS: kafka:9092
+    networks:
+      - backend
+    depends_on:
+      - "kafka"
 
 networks:
   backend:

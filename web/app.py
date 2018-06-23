@@ -1,3 +1,5 @@
+import sys
+import os
 import asyncio
 from typing import Optional
 
@@ -5,6 +7,8 @@ from quart import jsonify, Quart, render_template, request
 
 from aiokafka import AIOKafkaConsumer
 import asyncio
+
+KAFKA_HOSTS = os.environ.get('KAFKA_HOSTS', 'kafka:9092')
 
 loop = asyncio.get_event_loop()
 
@@ -15,9 +19,17 @@ app.clients = set()
 async def consume():
     consumer = AIOKafkaConsumer(
         'apache_access_log',
-        loop=loop, bootstrap_servers='kafka:9092')
+        loop=loop, bootstrap_servers=KAFKA_HOSTS)
     # Get cluster layout and join group `my-group`
-    await consumer.start()
+    for i in range(10):
+        try:
+            await consumer.start()
+            break
+        except:
+            print('failed to connect. retry...')
+            await asyncio.sleep(3)
+    else:
+        sys.exit(1)
     try:
         # Consume messages
         print("wait")
@@ -93,4 +105,4 @@ async def sse():
 
 if __name__ == '__main__':
     loop.create_task(consume())
-    app.run(loop=loop)
+    app.run(host='0.0.0.0', loop=loop)
