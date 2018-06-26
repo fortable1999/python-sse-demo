@@ -1,50 +1,25 @@
 import sys
+from urllib import parse
 import os
 import json
 import asyncio
 from typing import Optional
 
 from quart import jsonify, Quart, render_template, request
+from quart.exceptions import BadRequest
 
+import kafka
 from aiokafka import AIOKafkaConsumer
 import asyncio
 
 KAFKA_HOSTS = os.environ.get('KAFKA_HOSTS', 'kafka:9092')
-
-loop = asyncio.get_event_loop()
-
 app = Quart(__name__)
 app.clients = set()
 
-
-async def consume():
-    consumer = AIOKafkaConsumer(
-        'apache_access_log',
-        loop=loop, bootstrap_servers=KAFKA_HOSTS)
-    # Get cluster layout and join group `my-group`
-    for i in range(10):
-        try:
-            await consumer.start()
-            break
-        except:
-            print('failed to connect. retry...')
-            await asyncio.sleep(3)
-    else:
-        sys.exit(1)
-    try:
-        # Consume messages
-        print("wait")
-        async for msg in consumer:
-            for queue in app.clients:
-                message = json.loads(msg.value).get('message', "NONE")
-                data = "%s > %s" % (msg.topic, message)
-                await queue.put(data)
-    finally:
-        # Will leave consumer group; perform autocommit if enabled.
-        await consumer.stop()
-
-
 class ServerSentEvent:
+    """
+    SSE format
+    """
 
     def __init__(
             self,
@@ -68,35 +43,49 @@ class ServerSentEvent:
         if self.retry is not None:
             message = f"{message}\nretry: {self.retry}"
         message = f"{message}\r\n\r\n"
-        return message.encode('utf-8')
-
+        result = message.encode('utf-8')
+        return result
 
 
 @app.route('/', methods=['GET'])
 async def index():
-    return await render_template('index.html')
-
-
-@app.route('/', methods=['POST'])
-async def broadcast():
-    data = await request.get_json()
-    for queue in app.clients:
-        await queue.put(data['message'])
-    return jsonify(True)
+    consumer = kafka.KafkaConsumer(bootstrap_servers=KAFKA_HOSTS)
+    topics = consumer.topics()
+    return await render_template('index.html', topics=topics)
 
 
 @app.route('/sse')
 async def sse():
-    queue = asyncio.Queue()
-    app.clients.add(queue)
+    loop = asyncio.get_event_loop()
+    consumer = AIOKafkaConsumer(loop=loop, bootstrap_servers=KAFKA_HOSTS)
+    
+    # wait for kafka ready, retry 10 ties
+    for i in range(10):
+        try:
+            await consumer.start()
+            break
+        except:
+            await asyncio.sleep(3)
+    else:
+        raise BadRequest()
+
+    query = dict(parse.parse_qsl(request.query_string))
+    if 'topics' in query:
+        consumer.subscribe(topics=query['topics'].split(','))
+    else:
+        consumer.subscribe(pattern='access_log-.*')
+
     async def send_events():
-        while True:
-            try:
-                data = await queue.get()
+        try:
+            async for msg in consumer:
+                # push to clients
+                message = json.loads(msg.value).get('message', "NONE")
+                data = "%s > %s" % (msg.topic, message)
                 event = ServerSentEvent(data)
                 yield event.encode()
-            except asyncio.CancelledError as error:
-                app.clients.remove(queue)
+        finally:
+            # due to bug: https://github.com/aio-libs/aiokafka/issues/252
+            await consumer.stop()
 
     return send_events(), {
         'Content-Type': 'text/event-stream',
@@ -105,5 +94,4 @@ async def sse():
     }
 
 if __name__ == '__main__':
-    loop.create_task(consume())
-    app.run(host='0.0.0.0', loop=loop)
+    app.run(host='0.0.0.0')

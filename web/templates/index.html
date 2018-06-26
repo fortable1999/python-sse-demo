@@ -4,6 +4,7 @@
     <title>Log monitor demo</title>
   </head>
   <body>
+		<div>hosts: {% for topic in topics %}<a href="/?topics={{ topic }}"><p>{{ topic }}</p></a>{% endfor %}</div>
 		<p>logs</p>
 		<div id="messages"></div>
     <script type="text/javascript" src="{{ url_for('static', filename='broadcast.js') }}"></script>
