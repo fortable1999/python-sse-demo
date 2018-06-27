@@ -1,14 +1,37 @@
 version: '3'
 services:
-  sorry:
+  sorry1:
     build:
       context: ./sorry
       dockerfile: Dockerfile
       args:
         buildno: 1
     ports:
-      - "80:80"
-      - "443:443"
+      - "10081:80"
+    networks:
+      - backend
+    depends_on:
+      - "kafka"
+  sorry2:
+    build:
+      context: ./sorry
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    ports:
+      - "10082:80"
+    networks:
+      - backend
+    depends_on:
+      - "kafka"
+  sorry3:
+    build:
+      context: ./sorry
+      dockerfile: Dockerfile
+      args:
+        buildno: 1
+    ports:
+      - "10083:80"
     networks:
       - backend
     depends_on:
