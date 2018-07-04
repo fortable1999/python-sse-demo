@@ -56,6 +56,13 @@ services:
     depends_on:
       - "zookeeper"
 
+  balancer:
+    build: ./balancer
+    ports:
+      - "5000:80"
+    networks:
+      - backend
+
   web:
     build: ./web
     ports:

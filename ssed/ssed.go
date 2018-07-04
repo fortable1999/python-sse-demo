@@ -69,7 +69,7 @@ func SSE(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 			if err := json.Unmarshal(msg.Value, &dat); err != nil {
 				dat = nil
 			}
-			fmt.Fprintf(rw, "%s\n\n", dat["message"])
+			fmt.Fprintf(rw, "data: %s\n\n", dat["message"])
 		case err := <-errCh:
 			fmt.Fprintf(rw, "err: %s\n\n", err.Error())
 		case <-closed:
