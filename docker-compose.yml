@@ -59,9 +59,21 @@ services:
   web:
     build: ./web
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       KAFKA_HOSTS: kafka:9092
+    networks:
+      - backend
+    depends_on:
+      - "kafka"
+
+  ssed:
+    build: ./ssed
+    ports:
+      - "5002:5000"
+    environment:
+        - BOOTSTRAP_SERVERS=kafka:9092
+        - HOST=0.0.0.0:5000
     networks:
       - backend
     depends_on:

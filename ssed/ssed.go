@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
 	"encoding/json"
@@ -16,7 +17,6 @@ func SSE(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// Make sure that the writer supports flushing.
 	//
 	flusher, ok := rw.(http.Flusher)
-
 	if !ok {
 		http.Error(rw, "Streaming unsupported!", http.StatusInternalServerError)
 		return
@@ -36,7 +36,11 @@ func SSE(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 
 	// Setup Kafka connection
 	//
-	consumer, err := NewLogConsumer([]string{"localhost:9092"}, topics)
+	bootstrapServers := os.Getenv("BOOTSTRAP_SERVERS")
+	if bootstrapServers == "" {
+	    bootstrapServers = "localhost:9092"
+	}
+	consumer, err := NewLogConsumer(bootstrapServers, topics)
 	if err != nil {
 		http.Error(rw, "Kafka connection failure!", http.StatusInternalServerError)
 		return
@@ -84,5 +88,9 @@ func main() {
 	router := httprouter.New()
 	router.GET("/sse", SSE)
 
-	log.Fatal(http.ListenAndServe("localhost:3000", router))
+	host := os.Getenv("HOST")
+	if host == "" {
+	    host = "localhost:5000"
+	}
+	log.Fatal(http.ListenAndServe(host, router))
 }

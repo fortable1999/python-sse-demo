@@ -5,10 +5,8 @@ import (
 	"encoding/hex"
 	"log"
 	// "regexp"
-	// "github.com/Shopify/sarama"
 	kafka "github.com/confluentinc/confluent-kafka-go/kafka"
 	"github.com/bsm/go-guid"
-	// sarama "github.com/bsm/sarama"
 )
 
 type Consumer struct {
@@ -17,16 +15,15 @@ type Consumer struct {
 	topics []string
 }
 
-func NewLogConsumer(zkList []string, topics []string) (*Consumer, error) {
+func NewLogConsumer(bootstrapServers string, topics []string) (*Consumer, error) {
 	// config := sarama.NewConfig()
 
 	if topics == nil {
 		topics = []string{"^access_log-.*"}
 	}
-	// c, err := sarama.NewConsumer(zkList, topics,)
 	guid := hex.EncodeToString(guid.New128().Bytes())
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "localhost",
+		"bootstrap.servers": bootstrapServers,
 		"group.id": guid,
 		// "auto.offset.reset": "earliest",
 	})
@@ -35,7 +32,7 @@ func NewLogConsumer(zkList []string, topics []string) (*Consumer, error) {
 		return nil, err
 	}
 	c.SubscribeTopics(topics, nil)
-	consumer := Consumer{ consumer:c, zk:zkList, topics:topics }
+	consumer := Consumer{ consumer:c, zk:[]string{bootstrapServers}, topics:topics }
 	return &consumer, err
 }
 
