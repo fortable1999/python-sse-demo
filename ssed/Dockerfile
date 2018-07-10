@@ -1,5 +1,8 @@
 FROM golang:1.10.0-alpine3.7
 
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
+
 RUN apk add --update --no-cache alpine-sdk bash ca-certificates \
       libressl \
       tar \

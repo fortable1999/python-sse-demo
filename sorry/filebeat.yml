@@ -8,7 +8,7 @@ filebeat.inputs:
 #   pretty: true
 
 output.kafka:
-  hosts: ["kafka:9092"]
+  hosts: ["localhost:9092"]
 
   # message topic selection + partitioning
   topic: access_log-${HOSTNAME}

@@ -90,7 +90,7 @@ func main() {
 
 	host := os.Getenv("HOST")
 	if host == "" {
-	    host = "localhost:5000"
+	    host = "localhost:5002"
 	}
 	log.Fatal(http.ListenAndServe(host, router))
 }

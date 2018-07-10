@@ -75,18 +75,4 @@ func (c *Consumer) Start(msgCh chan *kafka.Message,
 			}
 		}
 	}
-
-	// for {
-	// 	log.Println("start looping")
-	// 	select {
-	// 	case msg := <-c.consumer.Messages():
-	// 		log.Printf("message event %s", string(msg.Value))
-	// 		msgCh <-msg
-	// 	case err := <-c.consumer.Errors():
-	// 		log.Printf("error event %s", err.Error())
-	// 		errCh <-err
-	// 	case <-sigCh:
-	// 		doneCh <-struct{}{}
-	// 	}
-	// }
 }
