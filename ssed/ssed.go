@@ -4,7 +4,6 @@ import (
 	"os"
 	"fmt"
 	"github.com/julienschmidt/httprouter"
-	"encoding/json"
 	"log"
 	"strings"
 	"net/http"
@@ -65,11 +64,7 @@ func SSE(rw http.ResponseWriter, r *http.Request, p httprouter.Params) {
 		// Server Sent Events compatible
 		select {
 		case msg := <-msgCh:
-			var dat map[string]interface{}
-			if err := json.Unmarshal(msg.Value, &dat); err != nil {
-				dat = nil
-			}
-			fmt.Fprintf(rw, "data: %s\n\n", dat["message"])
+			fmt.Fprintf(rw, "data: %s\n\n", string(msg.Value))
 		case err := <-errCh:
 			fmt.Fprintf(rw, "err: %s\n\n", err.Error())
 		case <-closed:

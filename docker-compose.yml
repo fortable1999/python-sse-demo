@@ -11,6 +11,15 @@ services:
     depends_on:
       - "kafka"
 
+  logstash:
+    build:
+      context: ./logstash
+    # ports:
+    #   - "5044:5044"
+    network_mode: "host"
+    depends_on:
+      - "kafka"
+
   zookeeper:
     image: wurstmeister/zookeeper
     # ports:

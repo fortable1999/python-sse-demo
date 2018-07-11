@@ -2,19 +2,22 @@ filebeat.inputs:
 - type: log
   enabled: true
   paths:
-    - /usr/local/apache2/logs/access_log
+    - /usr/local/apache2/logs/*/busy_access_log
 
 # output.console:
 #   pretty: true
 
-output.kafka:
-  hosts: ["localhost:9092"]
+# output.kafka:
+#   hosts: ["localhost:9092"]
+#
+#   # message topic selection + partitioning
+#   topic: access_log-${HOSTNAME}
+#   partition.round_robin:
+#     reachable_only: false
+#
+#   required_acks: 1
+#   compression: gzip
+#   max_message_bytes: 1000000
 
-  # message topic selection + partitioning
-  topic: access_log-${HOSTNAME}
-  partition.round_robin:
-    reachable_only: false
-
-  required_acks: 1
-  compression: gzip
-  max_message_bytes: 1000000
+output.logstash:
+  hosts: ["localhost:5044"]
