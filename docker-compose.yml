@@ -11,9 +11,15 @@ services:
     depends_on:
       - "kafka"
 
+  consul:
+    image: consul
+    network_mode: "host"
+
   logstash:
     build:
       context: ./logstash
+    environment:
+      XPACK_MONITORING_ENABLED: "false"
     # ports:
     #   - "5044:5044"
     network_mode: "host"

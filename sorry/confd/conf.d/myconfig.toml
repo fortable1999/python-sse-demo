@@ -1,0 +1,7 @@
+[template]
+src = "filebeat.yml.tmpl"
+dest = "/etc/filebeat/filebeat.yml"
+keys = [
+    "/filebeat/logstash/hosts"
+]
+reload_cmd = "/etc/init.d/filebeat restart"

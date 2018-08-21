@@ -1,0 +1,12 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /usr/local/apache2/logs/*/busy_access_log
+
+# output.console:
+#   pretty: true
+
+output.logstash:
+  # hosts: ["localhost:5044"]
+  hosts: {{getv "/filebeat/logstash/hosts" "[\"localhost:5044\"]"}}
