@@ -53,5 +53,5 @@ RUN set -eux; \
 
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH" && go get github.com/kelseyhightower/confd
 
-CMD /etc/init.d/filebeat start && httpd && /go/bin/confd -watch -backend consul -node 127.0.0.1:8500
+CMD /etc/init.d/filebeat start; httpd; /go/bin/confd -watch -backend consul -node 127.0.0.1:8500
 # CMD  confd -watch -d -backend consul -node 127.0.0.1:8500 &; httpd; filebeat -e -c /etc/filebeat/filebeat.yml

@@ -15,6 +15,22 @@ services:
     image: consul
     network_mode: "host"
 
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.1
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    network_mode: "host"
+    # volumes:
+    #   - esdata1:/usr/share/elasticsearch/data
+    depends_on:
+      - "kafka"
+
   logstash:
     build:
       context: ./logstash
