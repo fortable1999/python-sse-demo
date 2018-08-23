@@ -1,0 +1,1 @@
+ELASTICSEARCH_HOSTS=["localhost"]

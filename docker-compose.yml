@@ -27,7 +27,11 @@ services:
         hard: -1
     network_mode: "host"
     # volumes:
-    #   - esdata1:/usr/share/elasticsearch/data
+    #   - type: bind
+    #     source: ./esdata/
+    #     target: /usr/share/elasticsearch/data
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
     depends_on:
       - "kafka"
 
@@ -87,3 +91,6 @@ services:
     network_mode: "host"
     depends_on:
       - "kafka"
+
+volumes:
+  esdata:
