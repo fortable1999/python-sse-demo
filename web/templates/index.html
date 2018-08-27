@@ -1,7 +1,14 @@
 {% extends "base.html" %}
 
 {% block context %}
-<div id="messages"></div>
+
+<div class="shell-wrap">
+  <p class="shell-top-bar">/Users/pjlangley/Documents/websites/</p>
+  <ul class="shell-body" id="messages">
+    <li>tail -f</li>
+  </ul>
+</div>
+
 {% endblock %}
 
 {% block extra_js %}
