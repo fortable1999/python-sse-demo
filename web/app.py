@@ -23,9 +23,6 @@ def search():
     topics = consumer.topics()
     q_str = request.args.get('query', '')
     logs = search_by_querystr(q_str)
-    # es = Elasticsearch(settings.ELASTICSEARCH_HOSTS)
-    # es_res = es.search(index=q_str+"-*", body={"query": {"match_all": {}}})
-    # logs = [hit['_source']['message'] for hit in es_res['hits']['hits']]
     return render_template('search.html', topics=topics, logs=logs)
 
 if __name__ == '__main__':
