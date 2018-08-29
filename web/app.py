@@ -12,10 +12,10 @@ app.clients = set()
 
 
 @app.route('/', methods=['GET'])
-def index():
+def stream():
     consumer = kafka.KafkaConsumer(bootstrap_servers=KAFKA_HOSTS)
     topics = consumer.topics()
-    return render_template('index.html', topics=topics)
+    return render_template('stream.html', topics=topics)
 
 @app.route('/search', methods=['GET'])
 def search():
