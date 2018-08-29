@@ -1,16 +1,42 @@
 version: '3'
 services:
-  sorry:
-    build:
-      context: ./sorry
-      args:
-        buildno: 1
-    # ports:
-    #   - "10081:10081"
+  #########################
+  ### Local debug servers
+  ### (Remove these in production servers!)
+  #########################
+  httpd:
+    image: httpd
     network_mode: "host"
-    depends_on:
-      - "kafka"
+    volumes:
+      - "logs:/usr/local/apache2/logs/demo/:rw"
+      - "./sorry/httpd.conf:/usr/local/apache2/conf/httpd.conf"
 
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:6.4.0
+    network_mode: "host"
+    volumes:
+      - "filebeat:/etc/filebeat/:ro"
+      - "logs:/usr/local/apache2/logs/demo/:ro"
+    command: filebeat -c /etc/filebeat/filebeat.yml
+    depends_on:
+      - "confd"
+      - "kafka"
+      - "elasticsearch"
+
+  confd:
+    image: rancher/confd
+    network_mode: "host"
+    command: -watch -backend consul -node 127.0.0.1:8500
+    volumes:
+      - "filebeat:/etc/filebeat/:rw"
+      - "./sorry/confd/:/etc/confd/"
+    depends_on:
+      - "consul"
+
+
+  #########################
+  ### Production servers
+  #########################
   consul:
     image: consul
     network_mode: "host"
@@ -20,16 +46,12 @@ services:
     environment:
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "ES_JAVA_OPTS=-Xms2048m -Xmx2048m"
     ulimits:
       memlock:
         soft: -1
         hard: -1
     network_mode: "host"
-    # volumes:
-    #   - type: bind
-    #     source: ./esdata/
-    #     target: /usr/share/elasticsearch/data
     volumes:
       - esdata:/usr/share/elasticsearch/data
     depends_on:
@@ -93,4 +115,6 @@ services:
       - "kafka"
 
 volumes:
+  logs:
+  filebeat:
   esdata:

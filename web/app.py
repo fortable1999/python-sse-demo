@@ -25,5 +25,13 @@ def search():
     logs = search_by_querystr(q_str)
     return render_template('search.html', topics=topics, logs=logs)
 
+@app.route('/diagram', methods=['GET'])
+def diagram():
+    consumer = kafka.KafkaConsumer(bootstrap_servers=KAFKA_HOSTS)
+    topics = consumer.topics()
+    q_str = request.args.get('query', '')
+    logs = search_by_querystr(q_str)
+    return render_template('diagram.html', topics=topics, logs=logs)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001)

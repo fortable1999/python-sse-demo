@@ -4,4 +4,5 @@ dest = "/etc/filebeat/filebeat.yml"
 keys = [
     "/filebeat/logstash/hosts"
 ]
-reload_cmd = "/etc/init.d/filebeat restart"
+### Uncomment this in production servers
+# reload_cmd = "/etc/init.d/filebeat restart"
