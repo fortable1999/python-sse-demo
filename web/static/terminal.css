@@ -43,6 +43,8 @@
   color: #45D40C;
   font: 0.8em 'Andale Mono', Consolas, 'Courier New';
   line-height: 1.6em;
+  height: 85vh;
+  overflow-y: scroll;
 
   -webkit-border-bottom-right-radius: 3px;
   -webkit-border-bottom-left-radius: 3px;
