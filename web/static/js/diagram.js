@@ -14,7 +14,6 @@ function fetch(topic) {
     {"topic": topic}
   ).done(function(data){
 	dataset.clear();
-	console.log(dataset);
     dataset.update(data);
 	graph2d.fit();
  });
