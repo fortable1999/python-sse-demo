@@ -18,7 +18,7 @@ def search_by_querystr(query_str):
 def histogram_by_topic(topic):
 
     now = datetime.datetime.now()
-    delta = datetime.timedelta(minutes=30)
+    delta = datetime.timedelta(minutes=15)
     start = int((now - delta).timestamp() * 1000)
     end = int(now.timestamp() * 1000)
     query = {
@@ -26,9 +26,13 @@ def histogram_by_topic(topic):
                 "histo": {
                     "date_histogram": {
                         "field": "@timestamp",
-                        "interval": "1m",
+                        "interval": "5s",
                         "time_zone": "Asia/Tokyo",
                         "min_doc_count": 0,
+                        "extended_bounds": {
+                            "min": start,
+                            "max": end,
+                            }
                         }
                     }
                 },
