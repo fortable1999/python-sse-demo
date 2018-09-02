@@ -29,7 +29,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Stream
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu pre-scrollable" role="menu" aria-labelledby="navbarDropdown">
               {% for topic in topics %}
               <a class="dropdown-item" href="/?topics={{ topic }}">{{ topic }}</a>
               {% endfor %}
@@ -42,7 +42,7 @@
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Diagram
             </a>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <div class="dropdown-menu pre-scrollable" aria-labelledby="navbarDropdown">
               {% for topic in topics %}
               <a class="dropdown-item" href="/diagram?topics={{ topic }}">{{ topic }}</a>
               {% endfor %}
