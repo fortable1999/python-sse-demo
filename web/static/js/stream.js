@@ -10,15 +10,15 @@ function listening(topics) {
 		listening(topics)
 	}
     es.onmessage = function (event) {
-        var do_scroll = (window.innerHeight + window.pageYOffset) >= document.body.offsetHeight
         var messages_dom = document.getElementById('messages');
+        var do_scroll = (messages_dom.scrollTop + messages_dom.offsetHeight) >= messages_dom.scrollHeight
         var message_dom = document.createElement('li');
         var content_dom = document.createTextNode(event.data);
         message_dom.appendChild(content_dom);
         messages_dom.appendChild(message_dom);
         // message_dom.scrollIntoView();
         if (do_scroll) {
-            window.scrollTo(0,document.body.scrollHeight)
+            messages_dom.scrollTop = messages_dom.scrollHeight
         }
     };
 }
