@@ -17,7 +17,6 @@ function listening(topics) {
 		var message_count = messages_dom.getElementsByTagName('li').length;
         message_dom.appendChild(content_dom);
         messages_dom.appendChild(message_dom);
-		console.log(message_count);
         // message_dom.scrollIntoView();
 		if (message_count > 100){
 			messages_dom.removeChild(messages_dom.firstChild)
