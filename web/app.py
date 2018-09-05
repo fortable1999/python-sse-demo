@@ -34,7 +34,10 @@ def diagram():
 @app.route('/histogram', methods=['GET'])
 def histogram():
     topic = request.args.get('topic', '')
-    data = histogram_by_topic(topic)
+    start = request.args.get('start', None)
+    end = request.args.get('end', None)
+    interval = request.args.get('interval', '5s')
+    data = histogram_by_topic(topic, start, end, interval)
     return jsonify(
         data
     )
