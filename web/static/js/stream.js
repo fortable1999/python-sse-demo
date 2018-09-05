@@ -18,7 +18,7 @@ function listening(topics) {
         message_dom.appendChild(content_dom);
         messages_dom.appendChild(message_dom);
         // message_dom.scrollIntoView();
-		if (message_count > 100){
+		if (message_count > 5000){
 			messages_dom.removeChild(messages_dom.firstChild)
 		}
 	
