@@ -117,6 +117,23 @@ services:
     depends_on:
       - "kafka"
 
+  #########################
+  ### Stress testing servers
+  ### (Remove these in production servers!)
+  #########################
+  log_generator:
+    image: python
+    network_mode: "host"
+    volumes:
+      - "./test/log_generator.py:/root/log_generator"
+      - "logs:/usr/local/apache2/logs/demo/:rw"
+    workdir:
+        /root
+    command:
+        python log_generator.py
+    depends_on:
+      - "filebeat"
+
 volumes:
   logs:
   filebeat:
