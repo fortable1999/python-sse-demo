@@ -11,20 +11,20 @@ function listening(topics) {
 	}
     es.onmessage = function (event) {
         var messages_dom = document.getElementById('messages');
-        var do_scroll = (messages_dom.scrollTop + messages_dom.offsetHeight) >= messages_dom.scrollHeight
+        // var do_scroll = (messages_dom.scrollTop + messages_dom.offsetHeight) >= messages_dom.scrollHeight
         var message_dom = document.createElement('li');
         var content_dom = document.createTextNode(event.data);
 		var message_count = messages_dom.getElementsByTagName('li').length;
         message_dom.appendChild(content_dom);
         messages_dom.appendChild(message_dom);
         // message_dom.scrollIntoView();
-		if (message_count > 5000){
-			messages_dom.removeChild(messages_dom.firstChild)
-		}
+		// if (message_count > 5000){
+		// 	messages_dom.removeChild(messages_dom.firstChild)
+		// }
 	
-        if (do_scroll) {
-            messages_dom.scrollTop = messages_dom.scrollHeight
-        }
+        // if (do_scroll) {
+        //     messages_dom.scrollTop = messages_dom.scrollHeight
+        // }
     };
 }
 

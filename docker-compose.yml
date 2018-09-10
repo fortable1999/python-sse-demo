@@ -30,7 +30,7 @@ services:
     volumes:
       - "filebeat:/etc/filebeat/:rw"
       - "./sorry/confd/:/etc/confd/"
-    depends_on:
+    depends_on: 
       - "consul"
 
 
@@ -124,10 +124,12 @@ services:
   log_generator:
     image: python
     network_mode: "host"
+    environment:
+        - APACHELOGPATH=/usr/local/apache2/logs/demo/busy_access_log
     volumes:
-      - "./test/log_generator.py:/root/log_generator"
+      - "./tests/:/root/"
       - "logs:/usr/local/apache2/logs/demo/:rw"
-    workdir:
+    working_dir:
         /root
     command:
         python log_generator.py
