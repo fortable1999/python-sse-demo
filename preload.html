@@ -1,0 +1,102 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	
+		<title>Preload</title>
+
+	  <style>
+	   p {margin: 0}
+	  </style>
+		
+	</head>
+<body>
+
+	<div id="workspace">
+		<div id="main-0" style="position: fixed; top:0px; margin: 0">
+			<p>helloworld</p>
+			<p>helloworld</p>
+			<p>helloworld</p>
+			<p>helloworld</p>
+			<p>helloworld</p>
+		</div>
+	</div>
+
+
+	<script type="text/javascript" charset="utf-8">
+
+    var block_now = 0;
+    var prefix = "main-";
+    var y = 0;
+
+		function getPreviousBlock(){
+			if (block_now <= 0) {
+				return
+			}
+			return document.getElementById(prefix + (block_now - 1).toString());
+		}
+
+		function getCurrentBlock(){
+			return document.getElementById(prefix + block_now.toString());
+		}
+
+		function getNextBlock(){
+			return document.getElementById(prefix + (block_now + 1).toString());
+		}
+
+		function blockGetIndex(block){
+			return parseInt(block.id.split("-")[1]);
+		}
+
+		function draw(block) {
+			var workspace = document.getElementById("workspace");
+			workspace.appendChild(block);
+		}
+
+    function blockSetIndex(block, idx){
+    	return prefix + "-" + idx.toString()
+    }
+    
+    function preloadNext(block){
+			var currentBlock = getCurrentBlock()
+    	var idx = blockGetIndex(block);
+    	var nextBlock = block.cloneNode(true);
+    	blockSetIndex(nextBlock, idx+1);
+			console.log(nextBlock.style.top, currentBlock.style);
+			var nextBlockTop = y + parseInt(currentBlock.style.scrollHeight);
+			nextBlock.style.top = nextBlockTop;
+			console.log(nextBlock.style.top);
+			draw(nextBlock);
+    }
+
+    function preloadPrevious(block){
+    	var idx = blockGetIndex(block);
+    	if (idx > 0){
+    		var previousBlock = block.cloneNode(true);
+    		blockSetIndex(previousBlock, idx-1);
+				draw(previousBlock);
+    	}
+    }
+
+    function preload(block){
+			preloadPrevious(block);
+			preloadNext(block);
+    }
+
+    function scroll() {
+			var e = window.event;
+			var currentBlock = getCurrentBlock()
+			y = y - e.deltaY;
+			currentBlock.style.top = y;
+			console.log(y, currentBlock.scrollHeight);
+		}
+
+    preload(document.getElementById(prefix + block_now.toString()));
+
+    document.getElementById("workspace").onwheel = scroll;
+		
+	</script>
+
+
+	
+</body>
+</html>
