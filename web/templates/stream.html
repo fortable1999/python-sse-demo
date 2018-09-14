@@ -4,12 +4,20 @@
 
 <div class="shell-wrap">
   <p class="shell-top-bar">stream</p>
-  <ul class="shell-body" id="messages">
+  <ul id="seamless-scrollarea" class="shell-body">
+
+	<div id="seamless" seamless-data="data" seamless-data-update-callback="dataCallback" seamless-block-size="100">
+		<div id="block-template" class="seamless-block" style="position: fixed; top:-1000px; margin: 0; width: 100%">
+		</div>
+		<li id="cell-template"></li>
+	</div>
+
   </ul>
 </div>
 
 {% endblock %}
 
 {% block extra_js %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/seamless.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='js/stream.js') }}"></script>
 {% endblock %}
