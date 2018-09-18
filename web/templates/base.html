@@ -7,13 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/terminal.css') }}">
   </head>
   <body>
-
-    <!-- <div id="mySidenav" class="sidenav"> -->
-    <!--   <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#38;times;</a> -->
-    <!--   <div>hosts: {% for topic in topics %}<a href="/?topics={{ topic }}"><p>{{ topic }}</p></a>{% endfor %}</div> -->
-    <!-- </div> -->
-    
-    <!-- <span style="font&#45;size:30px;cursor:pointer" onclick="openNav()">&#38;#9776; open</span> -->
     
     <nav class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Logs</a>
@@ -31,7 +24,7 @@
             </a>
             <div class="dropdown-menu pre-scrollable" role="menu" aria-labelledby="navbarDropdown">
               {% for topic in topics %}
-              <a class="dropdown-item" href="/?topics={{ topic }}">{{ topic }}</a>
+              <a class="dropdown-item" href="/?topic={{ topic }}">{{ topic }}</a>
               {% endfor %}
             </div>
           </li>

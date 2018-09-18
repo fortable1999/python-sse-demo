@@ -10,12 +10,17 @@ KAFKA_HOSTS = os.environ.get('KAFKA_HOSTS', 'localhost:9092')
 app = Flask(__name__)
 app.clients = set()
 
-
 @app.route('/', methods=['GET'])
-def stream():
+def log():
     consumer = kafka.KafkaConsumer(bootstrap_servers=KAFKA_HOSTS)
     topics = consumer.topics()
-    return render_template('stream.html', topics=topics)
+    topic = request.args.get('topic', '')
+    return render_template('log.html', topics=topics, topic=topic)
+
+@app.route('/stream', methods=['GET'])
+def stream():
+    topic = request.args.get('topic', '')
+    return render_template('stream.html', topic=topic)
 
 @app.route('/search', methods=['GET'])
 def search():

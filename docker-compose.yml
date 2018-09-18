@@ -121,20 +121,20 @@ services:
   ### Stress testing servers
   ### (Remove these in production servers!)
   #########################
-  log_generator:
-    image: python
-    network_mode: "host"
-    environment:
-        - APACHELOGPATH=/usr/local/apache2/logs/demo/busy_access_log
-    volumes:
-      - "./tests/:/root/"
-      - "logs:/usr/local/apache2/logs/demo/:rw"
-    working_dir:
-        /root
-    command:
-        python log_generator.py
-    depends_on:
-      - "filebeat"
+  # log_generator:
+  #   image: python
+  #   network_mode: "host"
+  #   environment:
+  #       - APACHELOGPATH=/usr/local/apache2/logs/demo/busy_access_log
+  #   volumes:
+  #     - "./tests/:/root/"
+  #     - "logs:/usr/local/apache2/logs/demo/:rw"
+  #   working_dir:
+  #       /root
+  #   command:
+  #       python log_generator.py
+  #   depends_on:
+  #     - "filebeat"
 
 volumes:
   logs:

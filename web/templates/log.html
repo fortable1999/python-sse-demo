@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block context %}
+
+<div class="shell-wrap">
+  <p class="shell-top-bar">stream</p>
+  <ul id="seamless-scrollarea" class="shell-body" style="overflow: hidden;">
+    <iframe id="iframe" src="/stream{% if topic %}?topic={{ topic }}{% endif %}" style="height: 100%; width: 100%; border: 0;}"></iframe>
+  </ul>
+</div>
+
+{% endblock %}
